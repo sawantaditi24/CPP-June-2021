@@ -2,13 +2,23 @@
 using namespace std;
 
 int const max_size = 30;
+void Display(int x[], int);
 
-void Enter(int A[], int n)
+
+void Swap(int *x, int *y)
 {
-    cout<<"enter elements one by one: ";
-    for(int i=0; i<n; i++)
+    int temp;
+    temp = *x;
+    *x = *y;
+    *y = temp;
+}
+
+void Enter(int a[], int N)
+{
+    cout<<"Enter elements one by one: ";
+    for(int i=0; i<N; i++)
     {
-        cin>>A[i];
+        cin>>a[i];
     }
 }
 
@@ -58,14 +68,19 @@ int Lsearch(int A[], int n, int ld)
 
 int Bsearch(int A[], int n, int bd)
 {
-    //sorting for Bsearch
+    //making a copy for sorting
+    int Atemp[max_size];
+    for(int i=0; i<n; i++)
+    {
+        Atemp[i]=A[i];
+    }
+
+    //sorting for Binary search
     for(int i=0; i<n-1; i++)
         for(int j=0; j<n-i-1; j++)
-            if(A[j]>A[j+1])
+            if(Atemp[j]>Atemp[j+1])
             {
-                int temp = A[j];
-                A[j]=A[j+1];
-                A[j+1]=temp;
+               Swap(&Atemp[j], &Atemp[j+1]);
             }
 
     int l=0, h=n-1;
@@ -73,9 +88,9 @@ int Bsearch(int A[], int n, int bd)
     while(l<=h)
     {
         mid = (l+h)/2;
-        if(A[mid]==bd)
+        if(Atemp[mid]==bd)
             return mid;
-        else if(A[mid]>bd)
+        else if(Atemp[mid]>bd)
             h=mid-1;
         else
             l=mid+1;
@@ -83,20 +98,106 @@ int Bsearch(int A[], int n, int bd)
     return -1;
 }
 
-void Display(int A[], int n)
+int Sum(int A[], int n)
 {
-    cout<<"the elements are: ";
+    int sum = 0;
     for(int i=0; i<n; i++)
     {
-        cout<<A[i]<<" ";
+        sum+=A[i];
+    }
+    return sum;
+}
+
+int Average(int A[], int n)
+{
+    int avg = Sum(A,n)/n;
+    return avg;
+}
+
+int Maximum(int A[], int n)
+{
+    int max = A[0];
+    for(int i=0; i<n; i++)
+        if(A[i]>max)
+            max=A[i];
+    return max;
+}
+
+int Minimum(int A[], int n)
+{
+    int min = A[0];
+    for(int i=0; i<n; i++)
+        if(A[i]<min)
+            min=A[i];
+    return min;
+}
+
+void Reverse(int A[], int n)
+{
+    //making a copy for reversing
+    int Atemp[max_size];
+    for(int i=0; i<n; i++)
+    {
+        Atemp[i]=A[i];
+    }
+    for(int i=0, j=n-1; i<j; i++, j--)
+    {
+        Swap(&Atemp[i], &Atemp[j]);
+    }
+    Display(Atemp, n);
+}
+
+int checkSort(int a[], int N)
+{
+    for(int i=0; i<N; i++)
+    {
+        if(a[i]>a[i+1])
+            return 0;
+    }
+    return 1;
+}
+
+void insertSort(int A2[], int &n2, int k3)
+{
+    cout<<"size in fn"<<n2<<endl;
+
+   if(checkSort(A2, n2))
+   {
+       cout<<"The array was sorted. Inserted "<<k3<<endl;
+       int i = n2-1;
+       while(A2[i]>k3)
+       {
+            A2[i+1]=A2[i];
+            i--;
+       }
+       A2[i+1]=k3;
+       n2+=1;
+   }
+   else
+   {
+        cout<<"Please enter a sorted array.\n";
+        Enter(A2, n2);
+        insertSort(A2, n2, k3);
+   }
+
+}
+
+void Display(int a[], int N)
+{
+    cout<<"The elements are: ";
+    for(int i=0; i<N; i++)
+    {
+        cout<<a[i]<<" ";
     }
     cout<<endl<<endl;
 }
 
+
+
 int main()
 {
-    int A[max_size];
-    int n, key1, key2, index, index2, ldata, lans, bdata, bans;
+    int A[max_size], Asort[max_size];
+    int n, key1, key2, index, index2, ldata, lans, bdata, bans, key3, n2;
     cout<<"Enter size of your array: ";
     cin>>n;
 
@@ -140,9 +241,50 @@ int main()
     cin>>bdata;
     bans= Bsearch(A, n, bdata);
     if(bans!=-1)
-        cout<<"Found at "<<bans<<" after sorting the array."<<endl;
+        cout<<"Found at index "<<bans<<" after sorting the array."<<endl;
     else
         cout<<"Not found!"<<endl;
+
+
+    cout<<"\nSome mathematical analysis on array -->\n";
+
+    //Sum
+    cout<<"The sum of elements is: "<<Sum(A, n)<<endl;
+
+    //Average
+    cout<<"The average of elements is: "<<Average(A, n)<<endl;
+
+    //Max element
+    cout<<"The element of max value is: "<<Maximum(A, n)<<endl;
+
+    //Min element
+    cout<<"The element of min value is: "<<Minimum(A, n)<<endl<<endl;
+
+    //Reversing array
+    cout<<"Reversed Array: ";
+    Reverse(A, n);
+
+
+    //Checking if array sorted
+    cout<<"Sort status: ";
+    if(checkSort(A, n))
+        cout<<"Your original array is sorted."<<endl;
+    else
+        cout<<"Your original array is not sorted."<<endl;
+
+
+    //Insert in sorted array
+    cout<<"Enter size of sorted array: ";
+    cin>>n2;
+    cout<<"old size: "<< n2<<endl;
+    Enter(Asort, n2);
+    Display(Asort, n2);
+    cout<<"Enter the element to be inserted in sorted array: ";
+    cin>>key3;
+    cout<<"key: "<<key3<<endl;
+    insertSort(Asort, n2, key3);
+    cout<<"New size after insertion: "<<n2<<endl;
+    Display(Asort, n2);
 
 }
 
