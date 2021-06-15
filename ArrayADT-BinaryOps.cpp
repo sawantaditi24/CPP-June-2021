@@ -130,7 +130,6 @@ int Difference(int A[], int B[], int m, int n)
 int main(){
 
     int A[max_size], B[max_size], m, n;
-    //int Atemp1[max_size], temp_sz1;
 
     cout<<"Enter size of array 1: ";
     cin>>m;
