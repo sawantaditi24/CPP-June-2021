@@ -11,7 +11,7 @@ void wordReverse(string &S)
     {
         if(S[End]== ' ')
         {
-            reverse(S.begin()+start, S.begin()+End);
+            reverse(S.begin()+start, S.begin()+End-1);
             start=End+1;
         }
     }
